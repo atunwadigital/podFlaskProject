@@ -12,6 +12,7 @@ app = Flask(__name__)
 @app.route('/')
 def index():
     return render_template("index.html")
+
 """
 CouchDB permanent view
 """
@@ -33,14 +34,12 @@ def alldocs():
     docs = []
     for row in all_docs(g.couch):
         docs.append(row.value)
-    return render_template("itemlist.html",alldocs=docs)
+    return render_template('itemlist.html',groupings=docs)
 
 
 class MultiCheckboxField(SelectMultipleField):
     widget = widgets.ListWidget(prefix_label=False)
     option_widget = widgets.CheckboxInput()
-
-
 
 """
  Add doc
@@ -65,11 +64,11 @@ if __name__ == "__main__":
     app.config.update(
         DEBUG = True,
         COUCHDB_SERVER = 'http://admin:pthakur%40plenartech.com@localhost:5984/',
-        COUCHDB_DATABASE = 'groups'
+        COUCHDB_DATABASE = 'groupings'
     )
     manager = flaskext.couchdb.CouchDBManager()
     manager.setup(app)
     manager.add_viewdef(all_docs)  # Install the view
     manager.add_viewdef(docs_by_guid)  # Install the view
-    # app.run(host='0.0.0.0', port=5000)
-    app.run(debug=True,host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0', port=5000)
+    # app.run(debug=True,host='0.0.0.0', port=5000)

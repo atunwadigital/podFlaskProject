@@ -12,16 +12,25 @@
 </head>
 <body>
 <form action="">
-    {% for docs in alldocs %}
-        {% set item = alldocs[loop.index] %}
-         <input type="checkbox" id="vehicle1" name="vehicle1" value="">
-         <label for="vehicle1">
+    {% for docs in groupings %}
+        {% set item = groupings[loop.index] %}
              {% for doc in item %}
-                 {% if doc =="displayName"%}
-                    {{ item[doc] }}
+
+                 {% if doc =="children"%}
+                     <input type="checkbox" id="{{ item['_id'] }}" name="{{ item['_id'] }}" value="">
+                    <label for="{{ item['_id'] }}">
+                        {{ item['displayName'] }}
+                    </label><br>
+                    {% set children = item[doc] %}
+                        {% for child in children  %}
+                            --  <input type="checkbox" id="{{ child['_id'] }}" name="{{ child['_id'] }}" value="">
+                            <label for="{{ child['_id'] }}">
+                               {{ child['displayName'] }}
+                            </label><br>
+                        {% endfor %}
                  {% endif %}
              {% endfor %}
-         </label><br>
+
     {% endfor %}
 
   <input type="submit" value="Submit">
