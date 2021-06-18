@@ -2,38 +2,87 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-<link rel="stylesheet" href="{{ url_for('static',filename='css/bootstrap.css') }}">
-<link rel="j" href="{{ url_for('static',filename='css/main.css') }}">
-<script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap.js') }}"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Atunmwa_Backup</title>
+    <link rel="stylesheet" href="{{ url_for('static',filename='assets/bootstrap/css/bootstrap.min.css') }}">
+     <link rel="stylesheet" href="{{ url_for('static',filename='assets/fonts/ionicons.min.css') }}">
+     <link rel="stylesheet" href="{{ url_for('static',filename='assets/css/Footer-Basic.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static',filename='assets/css/Highlight-Clean.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static',filename='assets/css/Navigation-Clean.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static',filename='assets/css/styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/main.css') }}">
+
     {% block head %} {% endblock %}
 </head>
 <body>
-<form action="">
-    {% for docs in groupings %}
-        {% set item = groupings[loop.index] %}
-             {% for doc in item %}
+<div style="background: var(--bs-blue);height: 18px;"></div>
+    <nav class="navbar navbar-light navbar-expand-md navigation-clean">
+        <div class="container"><a class="navbar-brand" href="#">PodBack</a><button data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navcol-1"><span class="visually-hidden">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navcol-1">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link active" href="#">Manual Backup</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Auto Backup</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Archived Podcast</a></li>
+                </ul>
+            </div><img style="width: 63px;height: 46px;">
+        </div>
+    </nav>
+    <hr style="background: var(--bs-blue);">
+    <section></section>
+    <div class="container">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            <div class="alert alert-{{ messages.0.0 }}" role="alert">
+              {% for category, message in messages %}
+                {{ message }} </br>
+              {% endfor %}
+            </div>
+          {% endif %}
+    {% endwith %}
+        <form action="/all/docs" method="POST">
+            <ul class="treeview">
+            {% for docs in groupings %}
+                {% set item = groupings[loop.index] %}
+                     {% for doc in item %}
+                         {% if doc =="children"%}
+                             <li>
+                                 <input type="checkbox" name="podlist" id="{{ item['_id'] }}"  value="{{ item['_id'] }}">
+                                 <label for="{{ item['_id'] }}" class="custom-unchecked">{{ item['displayName'] }}</label>
+                                {% set children = item[doc] %}
+                                  <ul>
+                                        {% for child in children  %}
+                                                <li>
+                                                    <input type="checkbox" name="podlist" id="{{ child['_id'] }}" value="{{ child['_id'] }}">
+                                                    <label for="{{ child['_id'] }}">{{ child['displayName'] }}</label><br>
+                                                </li>
+                                        {% endfor %}
+                                  </ul>
+                             </li>
+                         {% endif %}
+                     {% endfor %}
+            {% endfor %}
+            </ul>
 
-                 {% if doc =="children"%}
-                     <input type="checkbox" id="{{ item['_id'] }}" name="{{ item['_id'] }}" value="">
-                    <label for="{{ item['_id'] }}">
-                        {{ item['displayName'] }}
-                    </label><br>
-                    {% set children = item[doc] %}
-                        {% for child in children  %}
-                            --  <input type="checkbox" id="{{ child['_id'] }}" name="{{ child['_id'] }}" value="">
-                            <label for="{{ child['_id'] }}">
-                               {{ child['displayName'] }}
-                            </label><br>
-                        {% endfor %}
-                 {% endif %}
-             {% endfor %}
+    <div class="row text-center" style="padding-right: 35px;">
+                <div class="col">
+                    <br/><br/>
+                    <button class="btn btn-primary" type="button">Check Size</button>
+                    <button class="btn btn-primary" type="submit" style="margin-left: 20px;background: var(--bs-red);">Update Auto Backup List</button>
+                </div>
+    </div>
+         </form>
+    </div>
 
-    {% endfor %}
-
-  <input type="submit" value="Submit">
-</form>
+<footer class="footer-basic">
+        <div class="social"><a href="#"><i class="icon ion-social-instagram"></i></a><a href="#"><i class="icon ion-social-twitter"></i></a><a href="#"><i class="icon ion-social-facebook"></i></a></div>
+        <ul class="list-inline"></ul>
+        <p class="copyright">Atunwa © 2021</p>
+</footer>
 </body>
+<script type="text/javascript" src="{{ url_for('static', filename='js/jquery-3.6.0.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/app.js') }}"></script>
+<script>
+
+</script>
 </html>
